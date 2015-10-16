@@ -34,7 +34,9 @@ resource "login" do
       end
       post do
         authenticate!
-        User.find({email:params[:email],password:params[:password]}) rescue error!('403 Invalid Login', 403)
+        @usr = User.select("id, name, login_count").find_by({email:params[:email],password:params[:password]}) rescue error!('403 Invalid Login', 403)
+        @usr.update_attribute(:login_count, @usr.login_count + 1)
+        return @usr
       end
 end
    #ONLY USER WORKS WITH GET / POST / PUT / DELETE
@@ -45,7 +47,7 @@ resource "user" do
       end
       get do
         authenticate!
-        User.select("id, name, login_count")
+        User.select("id, name, login_count, email, password")
       end
       get ':id' do
         authenticate!
