@@ -47,7 +47,7 @@ resource "user" do
       end
       get do
         authenticate!
-        User.select("id, name, login_count, email, password")
+        User.select("id, name, login_count")
       end
       get ':id' do
         authenticate!
