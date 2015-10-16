@@ -45,11 +45,11 @@ resource "user" do
       end
       get do
         authenticate!
-        User.all
+        User.select("id, name, login_count")
       end
       get ':id' do
         authenticate!
-        User.find(params[:id]) rescue error!('404 Not Found', 404)
+        User.select("id, name, login_count").find(params[:id]) rescue error!('404 Not Found', 404)
       end
       delete ':id' do
         authenticate!
